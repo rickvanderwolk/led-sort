@@ -366,6 +366,33 @@ def cycle_sort(values):
             show_change(values, changed_indices=[cycle_start, pos])
             iteration_count += 1
 
+def odd_even_sort(values):
+    global current_algorithm, iteration_count
+    current_algorithm = "Odd-Even Sort"
+
+    n = len(values)
+    sorted = False
+
+    while not sorted:
+        sorted = True
+
+        for i in range(1, n - 1, 2):
+            if values[i] > values[i + 1]:
+                values[i], values[i + 1] = values[i + 1], values[i]
+                show_change(values, changed_indices=[i, i + 1])
+                iteration_count += 1
+                sorted = False
+
+        for i in range(0, n - 1, 2):
+            if values[i] > values[i + 1]:
+                values[i], values[i + 1] = values[i + 1], values[i]
+                show_change(values, changed_indices=[i, i + 1])
+                iteration_count += 1
+                sorted = False
+
+        show_current_sort(values)
+        time.sleep(SLEEP_BETWEEN_CHANGES)
+
 def run_all_sorts_forever():
     algorithms = [
         bogosort,
@@ -382,7 +409,8 @@ def run_all_sorts_forever():
         pancake_sort,
         stooge_sort,
         slow_sort,
-        cycle_sort
+        cycle_sort,
+        odd_even_sort
     ]
 
     algorithms_to_run = [alg for alg in algorithms if alg.__name__ not in EXCLUDE_ALGORITHMS]
