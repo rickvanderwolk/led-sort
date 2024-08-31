@@ -29,7 +29,7 @@ A Python (Raspberry Pi) script that visualizes various sorting algorithms on a L
 5. In newer versions of Raspberry Pi OS we can not use `pip` (Python package manager) directly. We can use a virtual environment by installing `sudo apt install python3-venv`
 6. Create a virtual environment `python -m venv led-sort`
 7. Activate virtual environment `source led-sort/bin/activate`
-8. Install necessary libraries `pip install adafruit-blinka adafruit-circuitpython-neopixel Flask`
+8. Install necessary libraries `pip install adafruit-blinka adafruit-circuitpython-neopixel Flask python-dotenv`
 9. Connect LED strip data pin to the Raspberry Pi via `GPIO 18`
 10. Copy config `cp .env.example .env`
 11. Change config if needed; for example change number of LEDs `NUMBER_OF_LEDS` (default 60) and / or `BRIGHTNESS` (default 0.5) with `nano .env`. Press `ctrl` + `x` and then `y` to save
