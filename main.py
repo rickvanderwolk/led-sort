@@ -3,12 +3,17 @@ import random
 import board
 import neopixel
 from flask import Flask, render_template_string
+from dotenv import load_dotenv
+import os
 
-BRIGHTNESS = 0.5 # between 0.0 and 1.0
-LED_STRIP_DATA_PIN = board.D18 # gpio 18
-NUMBER_OF_LEDS = 60
-SLEEP_BETWEEN_CHANGES = 0.5
-SLEEP_BETWEEN_ALGORITHMS = 5
+load_dotenv()
+
+BRIGHTNESS = float(os.getenv('BRIGHTNESS', 0.5))
+LED_STRIP_DATA_PIN = getattr(board, os.getenv('LED_STRIP_DATA_PIN', 'D18'))
+NUMBER_OF_LEDS = int(os.getenv('NUMBER_OF_LEDS', 60))
+SLEEP_BETWEEN_CHANGES = float(os.getenv('SLEEP_BETWEEN_CHANGES', 0.5))
+SLEEP_BETWEEN_ALGORITHMS = int(os.getenv('SLEEP_BETWEEN_ALGORITHMS', 5))
+EXCLUDE_ALGORITHMS = os.getenv('EXCLUDE_ALGORITHMS', '').split(',')
 
 strip = neopixel.NeoPixel(LED_STRIP_DATA_PIN, NUMBER_OF_LEDS, brightness=BRIGHTNESS, auto_write=False)
 current_algorithm = ""
@@ -292,7 +297,7 @@ def bogosort(values):
 
 def run_all_sorts_forever():
     algorithms = [
-        #bogosort,
+        bogosort,
         insertion_sort,
         selection_sort,
         quick_sort,
@@ -305,6 +310,8 @@ def run_all_sorts_forever():
         radix_sort,
         pancake_sort
     ]
+
+    algorithms_to_run = [alg for alg in algorithms if alg.__name__ not in EXCLUDE_ALGORITHMS]
 
     while True:
         for algorithm in algorithms:

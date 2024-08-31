@@ -31,7 +31,8 @@ A Python (Raspberry Pi) script that visualizes various sorting algorithms on a L
 7. Activate virtual environment `source led-sort/bin/activate`
 8. Install necessary libraries `pip install adafruit-blinka adafruit-circuitpython-neopixel Flask`
 9. Connect LED strip data pin to the Raspberry Pi via `GPIO 18`
-10. If needed, change number of LEDs `NUMBER_OF_LEDS` (default 60) and / or `BRIGHTNESS` (default 0.5) with `nano led-sort/main.py`. Press `ctrl` + `x` and then `y` to save
+10. Copy config `cp .env.example .env`
+11. Change config if needed; for example change number of LEDs `NUMBER_OF_LEDS` (default 60) and / or `BRIGHTNESS` (default 0.5) with `nano .env`. Press `ctrl` + `x` and then `y` to save
 11. [Run script](#run-script)
 
 ### Start script on boot (optional)
