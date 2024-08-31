@@ -393,6 +393,60 @@ def odd_even_sort(values):
         show_current_sort(values)
         time.sleep(SLEEP_BETWEEN_CHANGES)
 
+def flash_sort(values):
+    global current_algorithm, iteration_count
+    current_algorithm = "Flash Sort"
+
+    n = len(values)
+    m = int(0.43 * n)
+    min_value = min(values)
+    max_value = max(values)
+
+    if min_value == max_value:
+        show_current_sort(values)
+        return
+
+    L = [0] * m
+    for value in values:
+        index = min(m - 1, (value - min_value) * (m - 1) // (max_value - min_value))
+        L[index] += 1
+
+    for i in range(1, m):
+        L[i] += L[i - 1]
+
+    flash_value = values[0]
+    move = 0
+    j = 0
+    k = m - 1
+
+    while move < n:
+        while j > L[k] - 1:
+            j += 1
+            k = min(m - 1, (values[j] - min_value) * (m - 1) // (max_value - min_value))
+
+        flash_value = values[j]
+        while j != L[k]:
+            k = min(m - 1, (flash_value - min_value) * (m - 1) // (max_value - min_value))
+            hold = values[L[k] - 1]
+            values[L[k] - 1] = flash_value
+            flash_value = hold
+            L[k] -= 1
+            show_change(values, changed_indices=[j, L[k]])
+            iteration_count += 1
+            move += 1
+
+    for i in range(1, n):
+        key = values[i]
+        j = i - 1
+        while j >= 0 and values[j] > key:
+            values[j + 1] = values[j]
+            j -= 1
+        values[j + 1] = key
+        show_change(values, changed_indices=[i, j + 1])
+        iteration_count += 1
+
+    show_current_sort(values)
+
 def run_all_sorts_forever():
     algorithms = [
         bogosort,
@@ -410,7 +464,8 @@ def run_all_sorts_forever():
         stooge_sort,
         slow_sort,
         cycle_sort,
-        odd_even_sort
+        odd_even_sort,
+        flash_sort
     ]
 
     algorithms_to_run = [alg for alg in algorithms if alg.__name__ not in EXCLUDE_ALGORITHMS]
