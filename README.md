@@ -8,6 +8,7 @@ A Python (Raspberry Pi) script that visualizes various sorting algorithms on a L
 - [Getting started](#getting-started)
 - [Run script](#run-script)
 - [View webpage](#view-webpage)
+- [Update](#update)
 
 <a id="hardware"></a>
 ## Hardware
@@ -26,14 +27,10 @@ A Python (Raspberry Pi) script that visualizes various sorting algorithms on a L
 2. Boot the Pi (might take a while depending on which Pi you're using)
 3. Connect via SSH `ssh <your-pi-username>@<your-pi-ip>`
 4. Clone repository `git clone https://github.com/rickvanderwolk/led-sort.git`
-5. In newer versions of Raspberry Pi OS we can not use `pip` (Python package manager) directly. We can use a virtual environment by installing `sudo apt install python3-venv`
-6. Create a virtual environment `python -m venv led-sort`
-7. Activate virtual environment `source led-sort/bin/activate`
-8. Install necessary libraries `pip install adafruit-blinka adafruit-circuitpython-neopixel Flask python-dotenv`
-9. Connect LED strip data pin to the Raspberry Pi via `GPIO 18`
-10. Copy config `cp led-sort/.env.example led-sort/.env`
-11. Change config if needed; for example change number of LEDs `NUMBER_OF_LEDS` (default 60) and / or `BRIGHTNESS` (default 0.5) with `nano led-sort/.env`. Press `ctrl` + `x` and then `y` to save
-11. [Run script](#run-script)
+5. Run install script `sh led-sort/install.sh`
+6. Connect LED strip data pin to the Raspberry Pi via `GPIO 18`
+7. Change config if needed; for example change number of LEDs `NUMBER_OF_LEDS` (default 60) and / or `BRIGHTNESS` (default 0.5) with `nano led-sort/.env`. Press `ctrl` + `x` and then `y` to save
+8. [Run script](#run-script)
 
 ### Start script on boot (optional)
 
@@ -52,3 +49,10 @@ Run script `sudo led-sort/bin/python led-sort/main.py`. You probably need to use
 ## View webpage
 
 Visit `http://<your-pi-ip>:5000`
+
+<a id="#update"></a>
+## Update
+
+If you're using an old version of this project and the repository has been updated since, use the command below to update.
+
+`sh led-sort/update.sh`
