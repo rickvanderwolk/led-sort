@@ -295,6 +295,21 @@ def bogosort(values):
         iteration_count += 1
         time.sleep(SLEEP_BETWEEN_CHANGES)
 
+def stooge_sort(values, i, j):
+    global current_algorithm, iteration_count
+    current_algorithm = "Stooge Sort"
+
+    if values[j] < values[i]:
+        values[i], values[j] = values[j], values[i]
+        show_change(values, changed_indices=[i, j])
+        iteration_count += 1
+
+    if j - i > 1:
+        t = (j - i + 1) // 3
+        stooge_sort(values, i, j - t)
+        stooge_sort(values, i + t, j)
+        stooge_sort(values, i, j - t)
+
 def run_all_sorts_forever():
     algorithms = [
         bogosort,
@@ -308,7 +323,8 @@ def run_all_sorts_forever():
         cocktail_shaker_sort,
         comb_sort,
         radix_sort,
-        pancake_sort
+        pancake_sort,
+        stooge_sort
     ]
 
     algorithms_to_run = [alg for alg in algorithms if alg.__name__ not in EXCLUDE_ALGORITHMS]
@@ -321,7 +337,7 @@ def run_all_sorts_forever():
             show_current_sort(values)
             time.sleep(SLEEP_BETWEEN_CHANGES)
 
-            if algorithm in [quick_sort]:
+            if algorithm in [quick_sort, stooge_sort]:
                 algorithm(values, 0, len(values) - 1)
             else:
                 algorithm(values)
