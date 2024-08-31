@@ -329,6 +329,43 @@ def slow_sort(values, i, j):
 
     slow_sort(values, i, j - 1)
 
+def cycle_sort(values):
+    global current_algorithm, iteration_count
+    current_algorithm = "Cycle Sort"
+
+    n = len(values)
+
+    for cycle_start in range(0, n - 1):
+        item = values[cycle_start]
+        pos = cycle_start
+
+        for i in range(cycle_start + 1, n):
+            if values[i] < item:
+                pos += 1
+
+        if pos == cycle_start:
+            continue
+
+        while item == values[pos]:
+            pos += 1
+
+        values[pos], item = item, values[pos]
+        show_change(values, changed_indices=[cycle_start, pos])
+        iteration_count += 1
+
+        while pos != cycle_start:
+            pos = cycle_start
+            for i in range(cycle_start + 1, n):
+                if values[i] < item:
+                    pos += 1
+
+            while item == values[pos]:
+                pos += 1
+
+            values[pos], item = item, values[pos]
+            show_change(values, changed_indices=[cycle_start, pos])
+            iteration_count += 1
+
 def run_all_sorts_forever():
     algorithms = [
         bogosort,
@@ -344,7 +381,8 @@ def run_all_sorts_forever():
         radix_sort,
         pancake_sort,
         stooge_sort,
-        slow_sort
+        slow_sort,
+        cycle_sort
     ]
 
     algorithms_to_run = [alg for alg in algorithms if alg.__name__ not in EXCLUDE_ALGORITHMS]
