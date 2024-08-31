@@ -477,22 +477,22 @@ def run_all_sorts_forever():
     algorithms = [
         bogosort,
         insertion_sort,
-        selection_sort,
         quick_sort,
-        bubble_sort,
-        shell_sort,
-        heap_sort,
-        gnome_sort,
-        cocktail_shaker_sort,
-        comb_sort,
-        radix_sort,
         pancake_sort,
-        stooge_sort,
-        slow_sort,
+        selection_sort,
+        cocktail_shaker_sort,
+        shell_sort,
         cycle_sort,
+        bubble_sort,
+        comb_sort,
         odd_even_sort,
+        heap_sort,
+        stooge_sort,
+        radix_sort,
+        gnome_sort,
         flash_sort,
-        odd_even_transposition_sort
+        odd_even_transposition_sort,
+        slow_sort
     ]
 
     algorithms_to_run = [alg for alg in algorithms if alg.__name__ not in EXCLUDE_ALGORITHMS]
