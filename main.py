@@ -473,6 +473,39 @@ def odd_even_transposition_sort(values):
 
     show_current_sort(values)
 
+def counting_sort(values):
+    global current_algorithm, iteration_count
+    current_algorithm = "Counting Sort"
+
+    max_val = max(values)
+    min_val = min(values)
+    range_of_elements = max_val - min_val + 1
+
+    count = [0] * range_of_elements
+    output = [0] * len(values)
+
+    for num in values:
+        count[num - min_val] += 1
+
+    for i in range(1, len(count)):
+        count[i] += count[i - 1]
+
+    for i in reversed(range(len(values))):
+        current_index = count[values[i] - min_val] - 1
+        previous_index = i
+
+        output[current_index] = values[i]
+        count[values[i] - min_val] -= 1
+
+        show_change(output, changed_indices=[previous_index, current_index])
+        iteration_count += 1
+
+    for i in range(len(values)):
+        values[i] = output[i]
+        show_change(values, changed_indices=[i])
+
+    show_current_sort(values)
+
 def run_all_sorts_forever():
     algorithms = [
         bogosort,
@@ -492,7 +525,8 @@ def run_all_sorts_forever():
         cycle_sort,
         odd_even_sort,
         flash_sort,
-        odd_even_transposition_sort
+        odd_even_transposition_sort,
+        counting_sort
     ]
 
     algorithms_to_run = [alg for alg in algorithms if alg.__name__ not in EXCLUDE_ALGORITHMS]
