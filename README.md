@@ -27,9 +27,9 @@ A Python (Raspberry Pi) script that visualizes various sorting algorithms on a L
 2. Boot the Pi (might take a while depending on which Pi you're using)
 3. Connect via SSH `ssh <your-pi-username>@<your-pi-ip>`
 4. Clone repository `git clone https://github.com/rickvanderwolk/led-sort.git`
-5. Run install script `sh led-sort/install.sh`
+5. Run install script `bash led-sort/install.sh` (might take a while)
 6. Connect LED strip data pin to the Raspberry Pi via `GPIO 18`
-7. Change config if needed; for example change number of LEDs `NUMBER_OF_LEDS` (default 60) and / or `BRIGHTNESS` (default 0.5) with `nano led-sort/.env`. Press `ctrl` + `x` and then `y` to save
+7. Change config if needed; for example change number of LEDs `NUMBER_OF_LEDS` (default 60) and / or `BRIGHTNESS` (default 0.5) with `nano led-sort/.env`. Press `ctrl` + `x` and then `y` to save.
 8. [Run script](#run-script)
 
 ### Start script on boot (optional)
@@ -53,6 +53,8 @@ Visit `http://<your-pi-ip>:5000`
 <a id="#update"></a>
 ## Update
 
-If you're using an old version of this project and the repository has been updated since, use the command below to update.
+If you're using an old version of this project and the repository has been updated since, use instructions below to update.
 
-`sh led-sort/update.sh`
+1. Update project `bash led-sort/update.sh`
+2. Check if new config options are available `diff -y led-sort/.env.example led-sort/.env`. Add new config options if needed with `nano led-sort/.env`.  Press `ctrl` + `x` and then `y` to save.
+3. Restart script or Pi
