@@ -30,12 +30,14 @@ def get_unsorted_array():
     return array
 
 def show_change(array, changed_indices=None):
+    global current_values
     if changed_indices:
         for i in changed_indices:
             strip[i] = (128, 0, 128)
         strip.show()
         time.sleep(SLEEP_BETWEEN_CHANGES)
     show_current_sort(array)
+    current_values = array.copy()
 
 def show_current_sort(array):
     for i in range(NUMBER_OF_LEDS):
@@ -109,7 +111,6 @@ def partition(values, start, end):
     if i + 1 != end:
         values[i + 1], values[end] = values[end], values[i + 1]
         changed_indices.extend([i + 1, end])
-
     return i + 1
 
 def shell_sort(values):
@@ -473,35 +474,42 @@ def odd_even_transposition_sort(values):
 
     show_current_sort(values)
 
-def run_all_sorts_forever():
-    algorithms = [
-        bogosort,
-        insertion_sort,
-        quick_sort,
-        pancake_sort,
-        selection_sort,
-        cocktail_shaker_sort,
-        shell_sort,
-        cycle_sort,
-        bubble_sort,
-        comb_sort,
-        odd_even_sort,
-        heap_sort,
-        stooge_sort,
-        radix_sort,
-        gnome_sort,
-        flash_sort,
-        odd_even_transposition_sort,
-        slow_sort
-    ]
+algorithms = [
+    bogosort,
+    insertion_sort,
+    quick_sort,
+    pancake_sort,
+    selection_sort,
+    cocktail_shaker_sort,
+    shell_sort,
+    cycle_sort,
+    bubble_sort,
+    comb_sort,
+    odd_even_sort,
+    heap_sort,
+    stooge_sort,
+    radix_sort,
+    gnome_sort,
+    flash_sort,
+    odd_even_transposition_sort,
+    slow_sort
+]
+algorithms_to_run = [alg for alg in algorithms if alg.__name__ not in EXCLUDE_ALGORITHMS]
 
-    algorithms_to_run = [alg for alg in algorithms if alg.__name__ not in EXCLUDE_ALGORITHMS]
+def calculate_progress(values):
+    correct_count = sum(1 for i in range(len(values)) if values[i] == i)
+    progress = (correct_count / len(values)) * 100
+    return progress
+
+def run_all_sorts_forever():
+    global algorithms_to_run, iteration_count, current_algorithm, current_values
 
     while True:
-        for algorithm in algorithms_to_run:
-            global iteration_count
+        for index, algorithm in enumerate(algorithms_to_run, start=1):
             iteration_count = 0
+            current_algorithm = algorithm.__name__.replace("_", " ").title()
             values = get_unsorted_array()
+            current_values = values.copy()
             show_current_sort(values)
             time.sleep(SLEEP_BETWEEN_CHANGES)
 
@@ -510,11 +518,16 @@ def run_all_sorts_forever():
             else:
                 algorithm(values)
 
+            current_values = values.copy()
             show_current_sort(values)
             time.sleep(SLEEP_BETWEEN_ALGORITHMS)
 
 @app.route('/')
 def index():
+    global algorithms_to_run, current_values
+    progress = calculate_progress(current_values)
+    algorithm_position = algorithms_to_run.index(eval(current_algorithm.replace(" ", "_").lower())) + 1
+
     return render_template_string("""
         <html>
             <head>
@@ -529,12 +542,14 @@ def index():
             </head>
             <body>
                 <div class="container">
-                    <h1>Algoritme: {{ current_algorithm }}</h1>
-                    <p>Iteraties: {{ iteration_count }}</p>
+                    <h1>Algorithm: {{ current_algorithm }}</h1>
+                    <p>Iterations: {{ iteration_count }}</p>
+                    <p>Progress: {{ progress }}%</p>
+                    <p>Algorithm {{ algorithm_position }} of {{ algorithms_to_run | length }}</p>
                 </div>
             </body>
         </html>
-    """, current_algorithm=current_algorithm, iteration_count=iteration_count)
+    """, current_algorithm=current_algorithm, iteration_count=iteration_count, progress=round(progress, 2), algorithm_position=algorithm_position, algorithms_to_run=algorithms_to_run)
 
 from threading import Thread
 sort_thread = Thread(target=run_all_sorts_forever)
