@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Starting installation..."
+
 echo "Creating and activating a virtual environment (since pip cannot be used directly in newer versions of Raspberry Pi OS)..."
 sudo apt install python3-venv -y
 
