@@ -314,7 +314,7 @@ def run_all_sorts_forever():
     algorithms_to_run = [alg for alg in algorithms if alg.__name__ not in EXCLUDE_ALGORITHMS]
 
     while True:
-        for algorithm in algorithms:
+        for algorithm in algorithms_to_run:
             global iteration_count
             iteration_count = 0
             values = get_unsorted_array()
