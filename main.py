@@ -16,6 +16,7 @@ SLEEP_BETWEEN_ALGORITHMS = int(os.getenv('SLEEP_BETWEEN_ALGORITHMS', 5))
 EXCLUDE_ALGORITHMS = os.getenv('EXCLUDE_ALGORITHMS', '').split(',')
 
 strip = neopixel.NeoPixel(LED_DATA_PIN, NUMBER_OF_LEDS, brightness=BRIGHTNESS, auto_write=False)
+current_algorithm_index = 0
 current_algorithm = ""
 iteration_count = 0
 app = Flask(__name__)
@@ -502,10 +503,10 @@ def calculate_progress(values):
     return progress
 
 def run_all_sorts_forever():
-    global algorithms_to_run, iteration_count, current_algorithm, current_values
+    global algorithms_to_run, iteration_count, current_algorithm, current_values, current_algorithm_index
 
     while True:
-        for index, algorithm in enumerate(algorithms_to_run, start=1):
+        for current_algorithm_index, algorithm in enumerate(algorithms_to_run):
             iteration_count = 0
             current_algorithm = algorithm.__name__.replace("_", " ").title()
             values = get_unsorted_array()
@@ -524,9 +525,9 @@ def run_all_sorts_forever():
 
 @app.route('/')
 def index():
-    global algorithms_to_run, current_values
+    global algorithms_to_run, current_values, current_algorithm_index
     progress = calculate_progress(current_values)
-    algorithm_position = algorithms_to_run.index(eval(current_algorithm.replace(" ", "_").lower())) + 1
+    algorithm_position = current_algorithm_index + 1
 
     return render_template_string("""
         <html>
