@@ -32,18 +32,20 @@ A Python (Raspberry Pi) script that visualizes various sorting algorithms on a L
 7. Change config if needed; for example change number of LEDs `NUMBER_OF_LEDS` (default 60) and / or `BRIGHTNESS` (default 0.5) with `nano led-sort/.env`. Press `ctrl` + `x` and then `y` to save.
 8. [Run script](#run-script)
 
-### Start script on boot (optional)
+<a id="#run-script"></a>
+## Run script
+
+### Run command
+
+Run script `sudo led-sort/bin/python led-sort/main.py`. You probably need to use `sudo` to run the script as we use the GPIO pins for communication with the LED strip.
+
+### Run on boot (optional)
 
 1. `crontab -e`
 2. Choose nano by pressing `1` + `enter`
 3. Add to following line `@reboot sleep 30 && sudo led-sort/bin/python led-sort/main.py >> /home/piledsort/led-sort/cron.log 2>&1`
 4. Press `ctrl` + `x` and then `y` to save
 5. Reboot `sudo reboot`
-
-<a id="#run-script"></a>
-## Run script
-
-Run script `sudo led-sort/bin/python led-sort/main.py`. You probably need to use `sudo` to run the script as we use the GPIO pins for communication with the LED strip.
 
 <a id="#view-webpage"></a>
 ## View webpage
