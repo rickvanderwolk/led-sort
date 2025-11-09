@@ -114,6 +114,48 @@ def partition(values, start, end):
         changed_indices.extend([i + 1, end])
     return i + 1
 
+def merge_sort(values, start, end):
+    global current_algorithm, iteration_count
+    current_algorithm = "Merge Sort"
+    if end - start > 1:
+        mid = (start + end) // 2
+        merge_sort(values, start, mid)
+        merge_sort(values, mid, end)
+        merge(values, start, mid, end)
+
+def merge(values, start, mid, end):
+    global iteration_count
+    left = values[start:mid]
+    right = values[mid:end]
+    i = j = 0
+    k = start
+    while i < len(left) and j < len(right):
+        if left[i] <= right[j]:
+            values[k] = left[i]
+            source_idx = start + i
+            i += 1
+        else:
+            values[k] = right[j]
+            source_idx = mid + j
+            j += 1
+        show_change(values, changed_indices=[k, source_idx])
+        iteration_count += 1
+        k += 1
+    while i < len(left):
+        values[k] = left[i]
+        source_idx = start + i
+        show_change(values, changed_indices=[k, source_idx])
+        iteration_count += 1
+        i += 1
+        k += 1
+    while j < len(right):
+        values[k] = right[j]
+        source_idx = mid + j
+        show_change(values, changed_indices=[k, source_idx])
+        iteration_count += 1
+        j += 1
+        k += 1
+
 def shell_sort(values):
     global current_algorithm, iteration_count
     current_algorithm = "Shell Sort"
@@ -163,7 +205,9 @@ def counting_sort_for_radix(arr, exp):
     n = len(arr)
     output = [0] * n
     count = [0] * 10
-    changed_indices = []
+
+    # Create a copy to track original positions
+    original_values = arr.copy()
 
     for i in range(n):
         index = (arr[i] // exp)
@@ -175,15 +219,23 @@ def counting_sort_for_radix(arr, exp):
     i = n - 1
     while i >= 0:
         index = (arr[i] // exp)
-        output[count[index % 10] - 1] = arr[i]
-        changed_indices.append(count[index % 10] - 1)
+        dest_pos = count[index % 10] - 1
+        output[dest_pos] = arr[i]
         count[index % 10] -= 1
         i -= 1
 
-    for i in range(len(arr)):
-        arr[i] = output[i]
-
-    return changed_indices
+    # Copy back and visualize the movement
+    for i in range(n):
+        if arr[i] != output[i]:
+            # Find where this output value came from in the original array
+            source_idx = original_values.index(output[i])
+            arr[i] = output[i]
+            show_change(arr, changed_indices=[i, source_idx])
+            # Mark as used to handle duplicates
+            original_values[source_idx] = -1
+        else:
+            arr[i] = output[i]
+            show_change(arr, changed_indices=[i])
 
 def radix_sort(values):
     global current_algorithm, iteration_count
@@ -191,9 +243,8 @@ def radix_sort(values):
     max1 = max(values)
     exp = 1
     while max1 // exp > 0:
-        changed_indices = counting_sort_for_radix(values, exp)
+        counting_sort_for_radix(values, exp)
         iteration_count += 1
-        show_change(values, changed_indices=changed_indices)
         exp *= 10
 
 def gnome_sort(values):
@@ -427,14 +478,17 @@ def flash_sort(values):
             k = min(m - 1, (values[j] - min_value) * (m - 1) // (max_value - min_value))
 
         flash_value = values[j]
+        flash_start = j
         while j != L[k]:
             k = min(m - 1, (flash_value - min_value) * (m - 1) // (max_value - min_value))
-            hold = values[L[k] - 1]
-            values[L[k] - 1] = flash_value
+            dest_idx = L[k] - 1
+            hold = values[dest_idx]
+            values[dest_idx] = flash_value
             flash_value = hold
             L[k] -= 1
-            show_change(values, changed_indices=[j, L[k]])
+            show_change(values, changed_indices=[flash_start, dest_idx])
             iteration_count += 1
+            flash_start = dest_idx
             move += 1
 
     for i in range(1, n):
@@ -479,6 +533,7 @@ algorithms = [
     bogosort,
     insertion_sort,
     quick_sort,
+    merge_sort,
     pancake_sort,
     selection_sort,
     cocktail_shaker_sort,
@@ -514,7 +569,7 @@ def run_all_sorts_forever():
             show_current_sort(values)
             time.sleep(SLEEP_BETWEEN_CHANGES)
 
-            if algorithm in [quick_sort, stooge_sort, slow_sort]:
+            if algorithm in [quick_sort, merge_sort, stooge_sort, slow_sort]:
                 algorithm(values, 0, len(values) - 1)
             else:
                 algorithm(values)
